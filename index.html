@@ -352,7 +352,7 @@
             <button class="new-chat-btn" onclick="clearChat()">Nuevo chat <span>📝</span></button>
             <div class="brand-logo"><span>Aura</span> IA</div>
         </div>
-        <div class="sidebar-footer">Desarrollado por X_DONALDFRUISTS</div>
+        <div class="sidebar-footer">Desarrollado por Donaldo Ysaias Soto Morillo</div>
     </div>
 
     <div class="main-content">
@@ -379,7 +379,6 @@
                 </div>
 
                 <div class="input-main-row">
-                    <!-- Botón + estilo ChatGPT que abre el explorador -->
                     <button class="plus-btn" id="plusBtn" onclick="document.getElementById('fileInput').click()">＋</button>
                     
                     <input type="file" id="fileInput" accept="image/*" style="display: none;">
@@ -413,7 +412,6 @@
 
         const fileInput = document.getElementById('fileInput');
 
-        // Escucha cuando el usuario selecciona una foto
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -453,14 +451,15 @@
             try {
                 let requestBody = {};
 
-                // CORRECCIÓN CON SYSTEM PROMPT: Forzamos al modelo de visión a reconocer que SÍ puede ver imágenes
                 if (imageToAppend) {
+                    // EXPLICACIÓN DEL FIX: Groq requiere pasar la URL en un formato específico "data:image/jpeg;base64,{datos_puros}"
+                    // Nos aseguramos de mantener la cabecera limpia que Groq de verdad tolera.
                     requestBody = {
                         model: "llama-3.2-11b-vision-preview",
                         messages: [
                             { 
                                 role: "system", 
-                                content: "Eres Aura IA, un asistente avanzado de inteligencia artificial con capacidades completas de visión. Tienes la habilidad de ver, analizar, describir e interpretar las imágenes que el usuario adjunta a la perfección. Responde con seguridad basándote en lo que ves." 
+                                content: "Eres Aura IA, un asistente avanzado de inteligencia artificial con capacidades completas de visión. Analiza detalladamente lo que el usuario adjunte y responde directamente con seguridad." 
                             },
                             {
                                 role: "user",
