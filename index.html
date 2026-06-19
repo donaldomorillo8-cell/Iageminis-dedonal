@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aura IA</title>
     
-    <!-- AQUÍ SE QUITA LA CARPETICA VACÍA Y SE PONE TU LOGO EN LA PESTAÑA -->
+    <!-- Favicon de la pestaña -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23a8c0ff'/%3E%3Cstop offset='50%25' stop-color='%239b51e0'/%3E%3Cstop offset='100%25' stop-color='%23e91e63'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M50 15 C65 15, 85 35, 85 50 C85 65, 65 85, 50 85 C35 85, 15 65, 15 50 C15 35, 35 15, 50 15 Z' fill='none' stroke='url(%23g)' stroke-width='6' opacity='0.4'/%3E%3Cpath d='M50 25 C75 10, 90 40, 75 60 C60 80, 40 90, 25 75 C10 60, 20 30, 50 25 Z' fill='none' stroke='url(%23g)' stroke-width='5' stroke-dasharray='4 2'/%3E%3Ccircle cx='50' cy='50' r='12' fill='url(%23g)'/%3E%3Ccircle cx='50' cy='50' r='4' fill='%23ffffff'/%3E%3C/svg%3E">
 
     <style>
@@ -139,10 +139,11 @@
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+        /* Avatares rediseñados */
         .avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 4px;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -156,9 +157,11 @@
             color: white;
         }
 
+        /* Estilo premium oscuro para el contenedor del logo en las respuestas */
         .chat-row.bot .avatar {
-            background-color: #10a37f;
-            color: white;
+            background-color: #1a1a1a;
+            border: 1px solid var(--border-color);
+            padding: 2px;
         }
 
         .message-content-wrapper {
@@ -387,8 +390,16 @@
     <div class="main-content">
         <div class="chat-container">
             <div class="chat-wrapper" id="chatWrapper">
+                <!-- MENSAJE DE BIENVENIDA ACTUALIZADO CON EL LOGO SVG -->
                 <div class="chat-row bot">
-                    <div class="avatar">AI</div>
+                    <div class="avatar">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                            <path d="M50 15 C65 15, 85 35, 85 50 C85 65, 65 85, 50 85 C35 85, 15 65, 15 50 C15 35, 35 15, 50 15 Z" fill="none" stroke="url(#auraGrad)" stroke-width="8" opacity="0.4"/>
+                            <path d="M50 25 C75 10, 90 40, 75 60 C60 80, 40 90, 25 75 C10 60, 20 30, 50 25 Z" fill="none" stroke="url(#auraGrad)" stroke-width="7" stroke-dasharray="4 2"/>
+                            <circle cx="50" cy="50" r="14" fill="url(#auraGrad)" />
+                            <circle cx="50" cy="50" r="5" fill="#ffffff" />
+                        </svg>
+                    </div>
                     <div class="message-content-wrapper">
                         <div class="sender-name">Aura IA</div>
                         <div class="message-text">¡Hola! Soy Aura IA. Estoy lista para responder tus preguntas y analizar tus imágenes. ¿En qué te puedo colaborar hoy?</div>
@@ -423,6 +434,16 @@
     <script>
         let GROQ_API_KEY = localStorage.getItem('groq_api_key') || "";
         let selectedImageBase64 = "";
+
+        // Variable global que guarda el diseño interno del logo para reusarlo dinámicamente
+        const auraLogoSvgHtml = `
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                <path d="M50 15 C65 15, 85 35, 85 50 C85 65, 65 85, 50 85 C35 85, 15 65, 15 50 C15 35, 35 15, 50 15 Z" fill="none" stroke="url(#auraGrad)" stroke-width="8" opacity="0.4"/>
+                <path d="M50 25 C75 10, 90 40, 75 60 C60 80, 40 90, 25 75 C10 60, 20 30, 50 25 Z" fill="none" stroke="url(#auraGrad)" stroke-width="7" stroke-dasharray="4 2"/>
+                <circle cx="50" cy="50" r="14" fill="url(#auraGrad)" />
+                <circle cx="50" cy="50" r="5" fill="#ffffff" />
+            </svg>
+        `;
 
         if (!GROQ_API_KEY) {
             document.getElementById('keyModal').style.display = 'flex';
@@ -536,7 +557,8 @@
             const uniqueId = 'msg-' + Date.now();
             rowDiv.className = `chat-row ${sender}`;
             
-            const avatarTxt = (sender === 'user') ? 'U' : 'AI';
+            // Si el remitente es el bot, introduce el SVG del logo, de lo contrario pone la 'U' del usuario
+            const avatarContent = (sender === 'user') ? 'U' : auraLogoSvgHtml;
             const senderName = (sender === 'user') ? 'Tú' : 'Aura IA';
             
             let imageHtml = "";
@@ -545,7 +567,7 @@
             }
 
             rowDiv.innerHTML = `
-                <div class="avatar">${avatarTxt}</div>
+                <div class="avatar">${avatarContent}</div>
                 <div class="message-content-wrapper">
                     <div class="sender-name">${senderName}</div>
                     <div class="message-text ${isThinking ? 'thinking-text' : ''}" id="${uniqueId}">${text}</div>
@@ -572,7 +594,7 @@
         function clearChat() {
             document.getElementById('chatWrapper').innerHTML = `
                 <div class="chat-row bot">
-                    <div class="avatar">AI</div>
+                    <div class="avatar">${auraLogoSvgHtml}</div>
                     <div class="message-content-wrapper">
                         <div class="sender-name">Aura IA</div>
                         <div class="message-text">Nuevo chat iniciado. ¿En qué te puede ayudar Aura IA hoy?</div>
