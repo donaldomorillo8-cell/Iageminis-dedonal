@@ -32,7 +32,6 @@
             overflow: hidden;
         }
 
-        /* Lateral - Estilo ChatGPT */
         .sidebar {
             width: 260px;
             background-color: var(--sidebar-bg);
@@ -63,7 +62,6 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
-        /* Contenedor del Logo de Aura */
         .brand-logo {
             font-size: 1.3rem;
             font-weight: 600;
@@ -84,7 +82,6 @@
             font-weight: bold; 
         }
 
-        /* Estilos para el Icono SVG del Logo */
         .aura-logo-svg {
             width: 28px;
             height: 28px;
@@ -99,7 +96,6 @@
             border-top: 1px solid var(--border-color);
         }
 
-        /* Área Principal de Chat */
         .main-content {
             flex: 1;
             display: flex;
@@ -127,7 +123,6 @@
             padding: 0 20px;
         }
 
-        /* Estructura de Mensajes ChatGPT */
         .chat-row {
             display: flex;
             gap: 16px;
@@ -138,7 +133,6 @@
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Avatares rediseñados */
         .avatar {
             width: 32px;
             height: 32px;
@@ -156,7 +150,6 @@
             color: white;
         }
 
-        /* Caja oscura para el logo de Aura */
         .chat-row.bot .avatar {
             background-color: #1a1a1a;
             border: 1px solid var(--border-color);
@@ -200,7 +193,6 @@
         }
         @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
-        /* Barra de Entrada Flotante - Estilo ChatGPT */
         .input-container {
             width: 100%;
             display: flex;
@@ -242,7 +234,6 @@
             color: var(--text-muted);
         }
 
-        /* Botón de Adjuntar Estilo ChatGPT (+) */
         .plus-btn {
             background: transparent;
             border: none;
@@ -262,7 +253,6 @@
             color: var(--text-color);
         }
 
-        /* Botón Enviar Estilo ChatGPT */
         .send-btn {
             background: #ffffff;
             border: none;
@@ -282,7 +272,6 @@
             opacity: 0.8;
         }
 
-        /* Vista previa dentro de la barra de texto */
         .bar-preview-container {
             display: none;
             padding: 0 0 10px 0;
@@ -317,49 +306,9 @@
             align-items: center;
             justify-content: center;
         }
-
-        /* Modal API Key */
-        .key-modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-        .key-modal-content {
-            background: var(--sidebar-bg);
-            padding: 30px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 420px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
-        .key-modal h3 { margin-bottom: 12px; color: #fff; }
-        .key-modal p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; }
-        .key-modal input {
-            width: 100%; padding: 12px; border-radius: 8px;
-            background: var(--bg-color); border: 1px solid var(--border-color);
-            color: #fff; margin-bottom: 20px; outline: none;
-        }
-        .key-modal button {
-            background: #10a37f; color: #fff; border: none;
-            padding: 10px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;
-        }
     </style>
 </head>
 <body>
-
-    <div id="keyModal" class="key-modal" style="display: none;">
-        <div class="key-modal-content">
-            <h3>Falta tu API Key de Groq</h3>
-            <p>Introduce tu clave privada de Groq (gsk_...) para poder usar Aura IA.</p>
-            <input type="text" id="modalKeyInput" placeholder="gsk_xxxxxxxxxxxxxxxxxxxx">
-            <button onclick="saveApiKey()">Guardar Clave</button>
-        </div>
-    </div>
 
     <div class="sidebar">
         <div class="top-sidebar">
@@ -407,7 +356,7 @@
                     </div>
                     <div class="message-content-wrapper">
                         <div class="sender-name">Aura IA</div>
-                        <div class="message-text">¡Hola! Soy Aura IA. Estoy lista para responder tus preguntas y analizar tus imágenes. ¿En qué te puedo colaborar hoy?</div>
+                        <div class="message-text">¡Hola! Soy Aura IA. Estoy lista para responder tus preguntas y analizar tus imágenes de forma totalmente libre. ¿En qué te puedo colaborar hoy?</div>
                     </div>
                 </div>
             </div>
@@ -415,21 +364,16 @@
 
         <div class="input-container">
             <div class="input-box-wrapper">
-                
                 <div class="bar-preview-container" id="barPreview">
                     <div class="bar-preview-wrapper">
                         <img src="" class="bar-preview-img" id="previewImg">
                         <button class="remove-preview-btn" onclick="clearSelectedImage()">✕</button>
                     </div>
                 </div>
-
                 <div class="input-main-row">
                     <button class="plus-btn" id="plusBtn" onclick="document.getElementById('fileInput').click()">＋</button>
-                    
                     <input type="file" id="fileInput" accept="image/*" style="display: none;">
-                    
                     <input type="text" id="userInput" placeholder="Pregúntale lo que deseas a Aura IA..." onkeypress="handleKeyPress(event)">
-                    
                     <button class="send-btn" onclick="sendMessage()">➔</button>
                 </div>
             </div>
@@ -437,7 +381,6 @@
     </div>
 
     <script>
-        let GROQ_API_KEY = localStorage.getItem('groq_api_key') || "";
         let selectedImageBase64 = "";
 
         function generateAuraLogoHtml() {
@@ -459,23 +402,7 @@
             `;
         }
 
-        if (!GROQ_API_KEY) {
-            document.getElementById('keyModal').style.display = 'flex';
-        }
-
-        function saveApiKey() {
-            const keyValue = document.getElementById('modalKeyInput').value.trim();
-            if (keyValue.startsWith('gsk_')) {
-                localStorage.setItem('groq_api_key', keyValue);
-                GROQ_API_KEY = keyValue;
-                document.getElementById('keyModal').style.display = 'none';
-            } else {
-                alert("Por favor ingresa una clave válida de Groq.");
-            }
-        }
-
         const fileInput = document.getElementById('fileInput');
-
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -501,10 +428,8 @@
             const messageText = inputElement.value.trim();
             
             if (messageText === '' && !selectedImageBase64) return;
-            if (!GROQ_API_KEY) return;
 
             const imageToAppend = selectedImageBase64;
-
             appendMessage(messageText, 'user', false, imageToAppend);
             
             inputElement.value = '';
@@ -513,53 +438,22 @@
             const thinkingId = appendMessage('Aura está procesando tu solicitud...', 'bot', true);
 
             try {
-                let requestBody = {};
-
-                if (imageToAppend) {
-                    // CAMBIADO: Se usa 'llama-3.2-90b-vision-preview' para máxima compatibilidad y estabilidad con imágenes en Groq
-                    requestBody = {
-                        model: "llama-3.2-90b-vision-preview",
-                        messages: [
-                            { 
-                                role: "system", 
-                                content: "Eres Aura IA, un asistente avanzado de inteligencia artificial con capacidades completas de visión. Analiza detalladamente lo que el usuario adjunte y responde directamente con seguridad." 
-                            },
-                            {
-                                role: "user",
-                                content: [
-                                    { type: "text", text: messageText || "Analiza esta imagen detalladamente." },
-                                    { type: "image_url", image_url: { url: imageToAppend } }
-                                ]
-                            }
-                        ]
-                    };
-                } else {
-                    requestBody = {
-                        model: "llama-3.3-70b-versatile",
-                        messages: [
-                            { role: "system", content: "Eres Aura IA, un asistente virtual útil, inteligente y directo." },
-                            { role: "user", content: messageText }
-                        ]
-                    };
-                }
-
-                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                // LLAMADA DIRECTA A NUESTRA RUTA BACKEND EN VERCEL
+                const response = await fetch("/api/chat", {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${GROQ_API_KEY}`
-                    },
-                    body: JSON.stringify(requestBody)
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: messageText,
+                        image: imageToAppend
+                    })
                 });
 
                 const data = await response.json();
 
-                if (data.choices && data.choices[0].message) {
-                    let botResponse = data.choices[0].message.content;
-                    botResponse = botResponse.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1');
-                    updateMessage(thinkingId, botResponse);
+                if (data.reply) {
+                    updateMessage(thinkingId, data.reply);
                 } else {
-                    updateMessage(thinkingId, "Error al procesar la solicitud. Verifica el estado de tu clave o cuotas.");
+                    updateMessage(thinkingId, data.error || "Error al procesar la solicitud.");
                 }
             } catch (error) {
                 updateMessage(thinkingId, "Hubo un error al conectar con Aura IA.");
@@ -576,9 +470,7 @@
             const senderName = (sender === 'user') ? 'Tú' : 'Aura IA';
             
             let imageHtml = "";
-            if (imageSrc) {
-                imageHtml = `<img src="${imageSrc}" class="chat-image-preview">`;
-            }
+            if (imageSrc) { imageHtml = `<img src="${imageSrc}" class="chat-image-preview">`; }
 
             rowDiv.innerHTML = `
                 <div class="avatar">${avatarContent}</div>
