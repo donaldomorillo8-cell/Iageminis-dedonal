@@ -32,6 +32,7 @@
             overflow: hidden;
         }
 
+        /* Lateral izquierdo */
         .sidebar {
             width: 260px;
             background-color: var(--sidebar-bg);
@@ -96,6 +97,7 @@
             border-top: 1px solid var(--border-color);
         }
 
+        /* Área de Chat */
         .main-content {
             flex: 1;
             display: flex;
@@ -193,6 +195,7 @@
         }
         @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
+        /* Barra de entrada de texto */
         .input-container {
             width: 100%;
             display: flex;
@@ -272,6 +275,7 @@
             opacity: 0.8;
         }
 
+        /* Barra de previsualización de imagen adjuntada */
         .bar-preview-container {
             display: none;
             padding: 0 0 10px 0;
@@ -330,7 +334,6 @@
                 </svg>
                 <span>Aura</span> IA
             </div>
-            
         </div>
         <div class="sidebar-footer">Desarrollado por Donaldo Ysaias Soto Morillo</div>
     </div>
@@ -356,7 +359,7 @@
                     </div>
                     <div class="message-content-wrapper">
                         <div class="sender-name">Aura IA</div>
-                        <div class="message-text">¡Hola! Soy Aura IA. Estoy lista para responder tus preguntas y analizar tus imágenes de forma totalmente libre. ¿En qué te puedo colaborar hoy?</div>
+                        <div class="message-text" id="welcome-msg">¡Hola! Soy Aura IA. Estoy lista para responder tus preguntas y analizar tus imágenes de forma totalmente libre. ¿En qué te puedo colaborar hoy?</div>
                     </div>
                 </div>
             </div>
@@ -430,15 +433,17 @@
             if (messageText === '' && !selectedImageBase64) return;
 
             const imageToAppend = selectedImageBase64;
+            
+            // Fuerza el rol a ser exclusivamente de Usuario ('user' -> "Tú")
             appendMessage(messageText, 'user', false, imageToAppend);
             
             inputElement.value = '';
             clearSelectedImage();
 
+            // Fuerza la espera a ser de Aura IA ('bot' -> "Aura IA")
             const thinkingId = appendMessage('Aura está procesando tu solicitud...', 'bot', true);
 
             try {
-                // LLAMADA DIRECTA A NUESTRA RUTA BACKEND EN VERCEL
                 const response = await fetch("/api/chat", {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -463,26 +468,35 @@
         function appendMessage(text, sender, isThinking = false, imageSrc = "") {
             const chatWrapper = document.getElementById('chatWrapper');
             const rowDiv = document.createElement('div');
-            const uniqueId = 'msg-' + Date.now();
+            const uniqueId = 'msg-' + Date.now() + Math.random().toString(36).substr(2, 4);
+            
             rowDiv.className = `chat-row ${sender}`;
             
+            // Validación estricta: si es 'user' es 'Tú', si no es 'Aura IA'
             const avatarContent = (sender === 'user') ? 'U' : generateAuraLogoHtml();
             const senderName = (sender === 'user') ? 'Tú' : 'Aura IA';
             
             let imageHtml = "";
-            if (imageSrc) { imageHtml = `<img src="${imageSrc}" class="chat-image-preview">`; }
+            if (imageSrc) { 
+                imageHtml = `<img src="${imageSrc}" class="chat-image-preview">`; 
+            }
 
             rowDiv.innerHTML = `
                 <div class="avatar">${avatarContent}</div>
                 <div class="message-content-wrapper">
                     <div class="sender-name">${senderName}</div>
-                    <div class="message-text ${isThinking ? 'thinking-text' : ''}" id="${uniqueId}">${text}</div>
+                    <div class="message-text ${isThinking ? 'thinking-text' : ''}" id="${uniqueId}"></div>
                     ${imageHtml}
                 </div>
             `;
             
             chatWrapper.appendChild(rowDiv);
-            document.querySelector('.chat-container').scrollTop = document.querySelector('.chat-container').scrollHeight;
+            
+            // Se inserta usando .innerText para que no se interpreten marcas raras de la IA como HTML
+            document.getElementById(uniqueId).innerText = text;
+            
+            const chatContainer = document.querySelector('.chat-container');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
             return uniqueId;
         }
 
@@ -491,7 +505,8 @@
             if (msgElement) {
                 msgElement.classList.remove('thinking-text');
                 msgElement.innerText = newText;
-                document.querySelector('.chat-container').scrollTop = document.querySelector('.chat-container').scrollHeight;
+                const chatContainer = document.querySelector('.chat-container');
+                chatContainer.scrollTop = chatContainer.scrollHeight;
             }
         }
 
