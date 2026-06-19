@@ -453,22 +453,31 @@
             try {
                 let requestBody = {};
 
-                // CAPACIDAD DE VISIÓN ACTIVA: Si hay imagen, usa el modelo de visión estructurado para Groq
+                // CORRECCIÓN CON SYSTEM PROMPT: Forzamos al modelo de visión a reconocer que SÍ puede ver imágenes
                 if (imageToAppend) {
                     requestBody = {
                         model: "llama-3.2-11b-vision-preview",
-                        messages: [{
-                            role: "user",
-                            content: [
-                                { type: "text", text: messageText || "Analiza esta imagen detalladamente." },
-                                { type: "image_url", image_url: { url: imageToAppend } }
-                            ]
-                        }]
+                        messages: [
+                            { 
+                                role: "system", 
+                                content: "Eres Aura IA, un asistente avanzado de inteligencia artificial con capacidades completas de visión. Tienes la habilidad de ver, analizar, describir e interpretar las imágenes que el usuario adjunta a la perfección. Responde con seguridad basándote en lo que ves." 
+                            },
+                            {
+                                role: "user",
+                                content: [
+                                    { type: "text", text: messageText || "Analiza esta imagen detalladamente." },
+                                    { type: "image_url", image_url: { url: imageToAppend } }
+                                ]
+                            }
+                        ]
                     };
                 } else {
                     requestBody = {
                         model: "llama-3.3-70b-versatile",
-                        messages: [{ role: "user", content: messageText }]
+                        messages: [
+                            { role: "system", content: "Eres Aura IA, un asistente virtual útil, inteligente y directo." },
+                            { role: "user", content: messageText }
+                        ]
                     };
                 }
 
