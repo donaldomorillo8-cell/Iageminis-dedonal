@@ -3,26 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini Core (Powered by Groq)</title>
+    <title>Aura IA</title>
     <style>
-        /* Variables de Color Estilo Oficial de Gemini */
         :root {
-            --bg-color: #131314;
-            --sidebar-bg: #1e1f20;
-            --text-color: #e3e3e3;
-            --text-muted: #8e9196;
-            --input-bg: #1e1f20;
-            --input-focus-bg: #282a2c;
-            --border-color: #3c4043;
-            --user-msg-color: #e3e3e3;
-            --bot-msg-color: #e3e3e3;
+            --bg-color: #212121;
+            --sidebar-bg: #171717;
+            --text-color: #ececec;
+            --text-muted: #b4b4b4;
+            --input-bg: #2f2f2f;
+            --border-color: #424242;
+            --user-msg-bg: #2f2f2f;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Google Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
@@ -33,76 +30,75 @@
             overflow: hidden;
         }
 
-        /* Sidebar Minimalista */
+        /* Lateral - Estilo ChatGPT */
         .sidebar {
-            width: 280px;
+            width: 260px;
             background-color: var(--sidebar-bg);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 20px 16px;
-            border-right: 1px solid rgba(255,255,255,0.05);
+            padding: 12px;
+            z-index: 10;
         }
 
         .top-sidebar .new-chat-btn {
-            background: #1a1a1a;
-            border: none;
-            color: var(--text-muted);
-            padding: 12px 16px;
-            border-radius: 50px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 10px 14px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: space-between;
+            width: 100%;
             font-weight: 500;
-            transition: background 0.2s, color 0.2s;
+            transition: background 0.2s;
         }
 
         .top-sidebar .new-chat-btn:hover {
-            background: #2b2c2d;
-            color: var(--text-color);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .brand-logo {
-            font-size: 1.4rem;
-            font-weight: 500;
+            font-size: 1.3rem;
+            font-weight: 600;
             color: var(--text-color);
-            margin-top: 30px;
-            padding-left: 10px;
+            margin-top: 24px;
+            padding-left: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-
-        .brand-logo span {
-            background: linear-gradient(45deg, #4285f4, #9b51e0, #e91e63);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: bold;
+        
+        .brand-logo span { 
+            color: #10a37f; /* Verde característico estilo ChatGPT adaptado a Aura */
+            font-weight: bold; 
         }
-
+        
         .sidebar-footer {
             font-size: 0.75rem;
             color: var(--text-muted);
             text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
         }
 
-        /* Contenedor Principal */
+        /* Área Principal de Chat */
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
             height: 100vh;
             position: relative;
+            background-color: var(--bg-color);
         }
 
         .chat-container {
             flex: 1;
             overflow-y: auto;
-            padding: 40px 20px;
+            padding: 24px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -110,28 +106,28 @@
 
         .chat-wrapper {
             width: 100%;
-            max-width: 760px;
+            max-width: 680px;
             display: flex;
             flex-direction: column;
-            gap: 32px;
+            gap: 24px;
+            padding: 0 20px;
         }
 
+        /* Burbujas y Filas de Mensajes - Rediseño ChatGPT */
         .chat-row {
             display: flex;
-            gap: 20px;
-            align-items: flex-start;
-            animation: fadeIn 0.3s ease;
+            gap: 16px;
+            width: 100%;
+            padding: 4px 0;
+            animation: fadeIn 0.2s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px; /* Cuadrados redondeados estilo OpenAI */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -141,21 +137,42 @@
         }
 
         .chat-row.user .avatar {
-            background-color: #565869;
+            background-color: #ab68ff;
             color: white;
         }
 
         .chat-row.bot .avatar {
-            background: linear-gradient(45deg, #4285f4, #9b51e0);
+            background-color: #10a37f;
             color: white;
+        }
+
+        .message-content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sender-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-color);
         }
 
         .message-text {
             font-size: 1rem;
-            line-height: 1.6;
+            line-height: 1.5;
             color: var(--text-color);
             white-space: pre-wrap;
-            padding-top: 4px;
+        }
+
+        .chat-image-preview {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 8px;
+            margin-top: 12px;
+            border: 1px solid var(--border-color);
+            display: block;
         }
 
         .thinking-text {
@@ -163,45 +180,41 @@
             font-style: italic;
             animation: pulse 1.5s infinite;
         }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
-        @keyframes pulse {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
-        }
-
-        /* Entrada Inferior Flotante */
+        /* Barra de Entrada Flotante - Estilo ChatGPT */
         .input-container {
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
-            background: linear-gradient(transparent, var(--bg-color) 40%);
+            padding: 0 20px 24px 20px;
+            background: linear-gradient(transparent, var(--bg-color) 20%);
         }
 
         .input-box-wrapper {
             width: 100%;
-            max-width: 760px;
-            position: relative;
+            max-width: 680px;
             background-color: var(--input-bg);
-            border-radius: 28px;
-            padding: 6px 14px;
+            border-radius: 16px;
+            padding: 10px 14px;
             display: flex;
-            align-items: center;
-            transition: background-color 0.2s;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
         }
 
-        .input-box-wrapper:focus-within {
-            background-color: var(--input-focus-bg);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        .input-main-row {
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
         }
 
         input[type="text"] {
             flex: 1;
             background: transparent;
             border: none;
-            padding: 14px 16px;
+            padding: 8px 10px;
             color: var(--text-color);
             font-size: 1rem;
             outline: none;
@@ -211,131 +224,298 @@
             color: var(--text-muted);
         }
 
-        .send-btn {
+        /* Botón de Adjuntar Estilo ChatGPT (+) */
+        .plus-btn {
             background: transparent;
             border: none;
-            color: #8ab4f8;
-            width: 40px;
-            height: 40px;
+            color: var(--text-muted);
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            transition: background 0.2s;
+            font-size: 1.3rem;
+            transition: background 0.2s, color 0.2s;
+        }
+        .plus-btn:hover {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-color);
         }
 
+        /* Botón Enviar Estilo ChatGPT */
+        .send-btn {
+            background: #ffffff;
+            border: none;
+            color: #000000;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
         .send-btn:hover {
-            background: rgba(255,255,255,0.05);
-            color: #c2e7ff;
+            opacity: 0.8;
+        }
+
+        /* Vista previa de imagen en la barra */
+        .bar-preview-container {
+            display: none;
+            padding: 0 0 10px 0;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .bar-preview-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .bar-preview-img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .remove-preview-btn {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #171717;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.6rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Modal Alerta de Seguridad */
+        .key-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .key-modal-content {
+            background: var(--sidebar-bg);
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .key-modal h3 { margin-bottom: 12px; color: #fff; }
+        .key-modal p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; }
+        .key-modal input {
+            width: 100%; padding: 12px; border-radius: 8px;
+            background: var(--bg-color); border: 1px solid var(--border-color);
+            color: #fff; margin-bottom: 20px; outline: none;
+        }
+        .key-modal button {
+            background: #10a37f; color: #fff; border: none;
+            padding: 10px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;
         }
     </style>
 </head>
 <body>
 
+    <div id="keyModal" class="key-modal" style="display: none;">
+        <div class="key-modal-content">
+            <h3>Falta tu API Key de Groq</h3>
+            <p>Introduce tu clave privada de Groq (gsk_...) para poder usar Aura IA.</p>
+            <input type="text" id="modalKeyInput" placeholder="gsk_xxxxxxxxxxxxxxxxxxxx">
+            <button onclick="saveApiKey()">Guardar Clave</button>
+        </div>
+    </div>
+
     <div class="sidebar">
         <div class="top-sidebar">
-            <button class="new-chat-btn" onclick="clearChat()">➕ Nuevo chat</button>
-            <div class="brand-logo">
-                <span>Gemini</span> Core
-            </div>
+            <button class="new-chat-btn" onclick="clearChat()">Nuevo chat <span>📝</span></button>
+            <div class="brand-logo"><span>Aura</span> IA</div>
         </div>
-        <div class="sidebar-footer">
-            Desarrollado por X_DONALDFRUISTS
-        </div>
+        <div class="sidebar-footer">Desarrollado por X_DONALDFRUISTS</div>
     </div>
 
     <div class="main-content">
         <div class="chat-container">
             <div class="chat-wrapper" id="chatWrapper">
                 <div class="chat-row bot">
-                    <div class="avatar">✨</div>
-                    <div class="message-text">Diseño Gemini listo y conectado a Groq de forma directa. ¡Pregúntame lo que quieras!</div>
+                    <div class="avatar">AI</div>
+                    <div class="message-content-wrapper">
+                        <div class="sender-name">Aura IA</div>
+                        <div class="message-text">¡Hola! Soy Aura IA. Estoy lista para responder tus preguntas y analizar tus fotos en este nuevo diseño. ¿En qué te puedo colaborar hoy?</div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="input-container">
             <div class="input-box-wrapper">
-                <input type="text" id="userInput" placeholder="Pregunta usando la potencia de Groq..." onkeypress="handleKeyPress(event)">
-                <button class="send-btn" onclick="sendMessage()">➔</button>
+                
+                <div class="bar-preview-container" id="barPreview">
+                    <div class="bar-preview-wrapper">
+                        <img src="" class="bar-preview-img" id="previewImg">
+                        <button class="remove-preview-btn" onclick="clearSelectedImage()">✕</button>
+                    </div>
+                </div>
+
+                <div class="input-main-row">
+                    <!-- Botón directo de carga (+) estilo ChatGPT -->
+                    <button class="plus-btn" id="plusBtn" onclick="document.getElementById('fileInput').click()">＋</button>
+                    
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                    
+                    <input type="text" id="userInput" placeholder="Pregúntale lo que deseas a Aura IA..." onkeypress="handleKeyPress(event)">
+                    
+                    <button class="send-btn" onclick="sendMessage()">➔</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Tu clave API de Groq original
-        const GROQ_API_KEY = "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"; 
+        let GROQ_API_KEY = localStorage.getItem('groq_api_key') || "";
+        let selectedImageBase64 = "";
+
+        if (!GROQ_API_KEY) {
+            document.getElementById('keyModal').style.display = 'flex';
+        }
+
+        function saveApiKey() {
+            const keyValue = document.getElementById('modalKeyInput').value.trim();
+            if (keyValue.startsWith('gsk_')) {
+                localStorage.setItem('groq_api_key', keyValue);
+                GROQ_API_KEY = keyValue;
+                document.getElementById('keyModal').style.display = 'none';
+            } else {
+                alert("Por favor ingresa una clave válida de Groq.");
+            }
+        }
+
+        const fileInput = document.getElementById('fileInput');
+
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedImageBase64 = e.target.result;
+                document.getElementById('previewImg').src = selectedImageBase64;
+                document.getElementById('barPreview').style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function clearSelectedImage() {
+            selectedImageBase64 = "";
+            fileInput.value = "";
+            document.getElementById('barPreview').style.display = 'none';
+            document.getElementById('previewImg').src = "";
+        }
 
         async function sendMessage() {
             const inputElement = document.getElementById('userInput');
             const messageText = inputElement.value.trim();
             
-            if (messageText === '') return;
+            if (messageText === '' && !selectedImageBase64) return;
+            if (!GROQ_API_KEY) return;
 
-            appendMessage(messageText, 'user');
+            const imageToAppend = selectedImageBase64;
+
+            appendMessage(messageText, 'user', false, imageToAppend);
+            
             inputElement.value = '';
+            clearSelectedImage();
 
-            const thinkingId = appendMessage('Pensando a velocidad Groq...', 'bot', true);
+            const thinkingId = appendMessage('Aura está procesando tu solicitud...', 'bot', true);
 
             try {
-                // Eliminamos cualquier proxy. Llamamos directamente al endpoint oficial de Groq
+                let requestBody = {};
+
+                if (imageToAppend) {
+                    requestBody = {
+                        model: "llama-3.2-11b-vision-preview",
+                        messages: [{
+                            role: "user",
+                            content: [
+                                { type: "text", text: messageText || "Analiza esta imagen detalladamente." },
+                                { type: "image_url", image_url: { url: imageToAppend } }
+                            ]
+                        }]
+                    };
+                } else {
+                    requestBody = {
+                        model: "llama-3.3-70b-versatile",
+                        messages: [{ role: "user", content: messageText }]
+                    };
+                }
+
                 const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${GROQ_API_KEY}`
                     },
-                    body: JSON.stringify({
-                        model: "llama-3.3-70b-versatile", // Cambiado al modelo estable compatible con peticiones frontend directas
-                        messages: [{
-                            role: "user",
-                            content: messageText
-                        }]
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
                 const data = await response.json();
 
-                if (data.choices && data.choices[0].message && data.choices[0].message.content) {
+                if (data.choices && data.choices[0].message) {
                     let botResponse = data.choices[0].message.content;
-                    
-                    // Limpieza estética de asteriscos markdown pesados
-                    botResponse = botResponse.replace(/\*\*(.*?)\*\*/g, '$1');
-                    botResponse = botResponse.replace(/\*(.*?)\*/g, '$1');
-
+                    botResponse = botResponse.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1');
                     updateMessage(thinkingId, botResponse);
-                } else if (data.error) {
-                    updateMessage(thinkingId, `Error de Groq: ${data.error.message}`);
                 } else {
-                    updateMessage(thinkingId, "Groq recibió el paquete pero retornó un formato inesperado.");
+                    updateMessage(thinkingId, "Error al procesar la solicitud. Verifica el estado de tu clave.");
                 }
-
             } catch (error) {
-                console.error("Error:", error);
-                updateMessage(thinkingId, "Hubo un error de conexión al consultar los servidores de Groq.");
+                updateMessage(thinkingId, "Hubo un error al conectar con Aura IA.");
             }
         }
 
-        function appendMessage(text, sender, isThinking = false) {
+        function appendMessage(text, sender, isThinking = false, imageSrc = "") {
             const chatWrapper = document.getElementById('chatWrapper');
             const rowDiv = document.createElement('div');
             const uniqueId = 'msg-' + Date.now();
-            
             rowDiv.className = `chat-row ${sender}`;
-            const avatarIcon = (sender === 'user') ? 'U' : '✨';
             
+            const avatarTxt = (sender === 'user') ? 'U' : 'AI';
+            const senderName = (sender === 'user') ? 'Tú' : 'Aura IA';
+            
+            let imageHtml = "";
+            if (imageSrc) {
+                imageHtml = `<img src="${imageSrc}" class="chat-image-preview">`;
+            }
+
             rowDiv.innerHTML = `
-                <div class="avatar">${avatarIcon}</div>
-                <div class="message-text ${isThinking ? 'thinking-text' : ''}" id="${uniqueId}">${text}</div>
+                <div class="avatar">${avatarTxt}</div>
+                <div class="message-content-wrapper">
+                    <div class="sender-name">${senderName}</div>
+                    <div class="message-text ${isThinking ? 'thinking-text' : ''}" id="${uniqueId}">
+                        ${text}
+                    </div>
+                    ${imageHtml}
+                </div>
             `;
             
             chatWrapper.appendChild(rowDiv);
-            
-            const chatContainer = document.querySelector('.chat-container');
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-            
+            document.querySelector('.chat-container').scrollTop = document.querySelector('.chat-container').scrollHeight;
             return uniqueId;
         }
 
@@ -344,25 +524,21 @@
             if (msgElement) {
                 msgElement.classList.remove('thinking-text');
                 msgElement.innerText = newText;
-                const chatContainer = document.querySelector('.chat-container');
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+                document.querySelector('.chat-container').scrollTop = document.querySelector('.chat-container').scrollHeight;
             }
         }
 
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
-
+        function handleKeyPress(event) { if (event.key === 'Enter') sendMessage(); }
+        
         function clearChat() {
-            const chatWrapper = document.getElementById('chatWrapper');
-            chatWrapper.innerHTML = `
+            document.getElementById('chatWrapper').innerHTML = `
                 <div class="chat-row bot">
-                    <div class="avatar">✨</div>
-                    <div class="message-text">Nuevo chat iniciado. ¿En qué te puedo ayudar hoy?</div>
-                </div>
-            `;
+                    <div class="avatar">AI</div>
+                    <div class="message-content-wrapper">
+                        <div class="sender-name">Aura IA</div>
+                        <div class="message-text">Nuevo chat iniciado. ¿En qué te puede ayudar Aura IA hoy?</div>
+                    </div>
+                </div>`;
         }
     </script>
 </body>
