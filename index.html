@@ -12,7 +12,6 @@
             --text-muted: #b4b4b4;
             --input-bg: #2f2f2f;
             --border-color: #424242;
-            --user-msg-bg: #2f2f2f;
         }
 
         * {
@@ -73,7 +72,11 @@
         }
         
         .brand-logo span { 
-            color: #10a37f; /* Verde característico estilo ChatGPT adaptado a Aura */
+            background: linear-gradient(45deg, #a8c0ff, #9b51e0, #e91e63); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            color: transparent;
             font-weight: bold; 
         }
         
@@ -113,7 +116,7 @@
             padding: 0 20px;
         }
 
-        /* Burbujas y Filas de Mensajes - Rediseño ChatGPT */
+        /* Estructura de Mensajes ChatGPT */
         .chat-row {
             display: flex;
             gap: 16px;
@@ -127,7 +130,7 @@
         .avatar {
             width: 30px;
             height: 30px;
-            border-radius: 4px; /* Cuadrados redondeados estilo OpenAI */
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -167,12 +170,13 @@
         }
 
         .chat-image-preview {
-            max-width: 100%;
-            max-height: 250px;
+            max-width: 280px;
+            max-height: 200px;
             border-radius: 8px;
             margin-top: 12px;
             border: 1px solid var(--border-color);
             display: block;
+            object-fit: cover;
         }
 
         .thinking-text {
@@ -206,7 +210,7 @@
         .input-main-row {
             width: 100%;
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             position: relative;
         }
 
@@ -264,7 +268,7 @@
             opacity: 0.8;
         }
 
-        /* Vista previa de imagen en la barra */
+        /* Vista previa dentro de la barra de texto */
         .bar-preview-container {
             display: none;
             padding: 0 0 10px 0;
@@ -277,8 +281,8 @@
             display: inline-block;
         }
         .bar-preview-img {
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
             object-fit: cover;
             border-radius: 8px;
             border: 1px solid var(--border-color);
@@ -300,7 +304,7 @@
             justify-content: center;
         }
 
-        /* Modal Alerta de Seguridad */
+        /* Modal API Key */
         .key-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -358,7 +362,7 @@
                     <div class="avatar">AI</div>
                     <div class="message-content-wrapper">
                         <div class="sender-name">Aura IA</div>
-                        <div class="message-text">¡Hola! Soy Aura IA. Estoy lista para responder tus preguntas y analizar tus fotos en este nuevo diseño. ¿En qué te puedo colaborar hoy?</div>
+                        <div class="message-text">¡Hola! Soy Aura IA. Estoy lista para responder tus preguntas y analizar tus imágenes. ¿En qué te puedo colaborar hoy?</div>
                     </div>
                 </div>
             </div>
@@ -375,7 +379,7 @@
                 </div>
 
                 <div class="input-main-row">
-                    <!-- Botón directo de carga (+) estilo ChatGPT -->
+                    <!-- Botón + estilo ChatGPT que abre el explorador -->
                     <button class="plus-btn" id="plusBtn" onclick="document.getElementById('fileInput').click()">＋</button>
                     
                     <input type="file" id="fileInput" accept="image/*" style="display: none;">
@@ -409,6 +413,7 @@
 
         const fileInput = document.getElementById('fileInput');
 
+        // Escucha cuando el usuario selecciona una foto
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -448,6 +453,7 @@
             try {
                 let requestBody = {};
 
+                // CAPACIDAD DE VISIÓN ACTIVA: Si hay imagen, usa el modelo de visión estructurado para Groq
                 if (imageToAppend) {
                     requestBody = {
                         model: "llama-3.2-11b-vision-preview",
@@ -507,9 +513,7 @@
                 <div class="avatar">${avatarTxt}</div>
                 <div class="message-content-wrapper">
                     <div class="sender-name">${senderName}</div>
-                    <div class="message-text ${isThinking ? 'thinking-text' : ''}" id="${uniqueId}">
-                        ${text}
-                    </div>
+                    <div class="message-text ${isThinking ? 'thinking-text' : ''}" id="${uniqueId}">${text}</div>
                     ${imageHtml}
                 </div>
             `;
