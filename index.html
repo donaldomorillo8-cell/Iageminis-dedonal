@@ -157,7 +157,7 @@
             color: white;
         }
 
-        /* Estilo premium oscuro para el contenedor del logo en las respuestas */
+        /* Caja oscura para el logo de Aura */
         .chat-row.bot .avatar {
             background-color: #1a1a1a;
             border: 1px solid var(--border-color);
@@ -390,13 +390,20 @@
     <div class="main-content">
         <div class="chat-container">
             <div class="chat-wrapper" id="chatWrapper">
-                <!-- MENSAJE DE BIENVENIDA ACTUALIZADO CON EL LOGO SVG -->
+                <!-- Mensaje inicial arreglado con su propia definición de colores interna -->
                 <div class="chat-row bot">
                     <div class="avatar">
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
-                            <path d="M50 15 C65 15, 85 35, 85 50 C85 65, 65 85, 50 85 C35 85, 15 65, 15 50 C15 35, 35 15, 50 15 Z" fill="none" stroke="url(#auraGrad)" stroke-width="8" opacity="0.4"/>
-                            <path d="M50 25 C75 10, 90 40, 75 60 C60 80, 40 90, 25 75 C10 60, 20 30, 50 25 Z" fill="none" stroke="url(#auraGrad)" stroke-width="7" stroke-dasharray="4 2"/>
-                            <circle cx="50" cy="50" r="14" fill="url(#auraGrad)" />
+                            <defs>
+                                <linearGradient id="avatarGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#a8c0ff" />
+                                    <stop offset="50%" stop-color="#9b51e0" />
+                                    <stop offset="100%" stop-color="#e91e63" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M50 15 C65 15, 85 35, 85 50 C85 65, 65 85, 50 85 C35 85, 15 65, 15 50 C15 35, 35 15, 50 15 Z" fill="none" stroke="url(#avatarGrad1)" stroke-width="8" opacity="0.4"/>
+                            <path d="M50 25 C75 10, 90 40, 75 60 C60 80, 40 90, 25 75 C10 60, 20 30, 50 25 Z" fill="none" stroke="url(#avatarGrad1)" stroke-width="7" stroke-dasharray="4 2"/>
+                            <circle cx="50" cy="50" r="14" fill="url(#avatarGrad1)" />
                             <circle cx="50" cy="50" r="5" fill="#ffffff" />
                         </svg>
                     </div>
@@ -435,15 +442,25 @@
         let GROQ_API_KEY = localStorage.getItem('groq_api_key') || "";
         let selectedImageBase64 = "";
 
-        // Variable global que guarda el diseño interno del logo para reusarlo dinámicamente
-        const auraLogoSvgHtml = `
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
-                <path d="M50 15 C65 15, 85 35, 85 50 C85 65, 65 85, 50 85 C35 85, 15 65, 15 50 C15 35, 35 15, 50 15 Z" fill="none" stroke="url(#auraGrad)" stroke-width="8" opacity="0.4"/>
-                <path d="M50 25 C75 10, 90 40, 75 60 C60 80, 40 90, 25 75 C10 60, 20 30, 50 25 Z" fill="none" stroke="url(#auraGrad)" stroke-width="7" stroke-dasharray="4 2"/>
-                <circle cx="50" cy="50" r="14" fill="url(#auraGrad)" />
-                <circle cx="50" cy="50" r="5" fill="#ffffff" />
-            </svg>
-        `;
+        // Cada vez que se use este fragmento de código, generará un ID único para evitar conflictos con los degradados
+        function generateAuraLogoHtml() {
+            const uniqueGradId = 'grad-' + Math.random().toString(36).substr(2, 9);
+            return `
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                    <defs>
+                        <linearGradient id="${uniqueGradId}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#a8c0ff" />
+                            <stop offset="50%" stop-color="#9b51e0" />
+                            <stop offset="100%" stop-color="#e91e63" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M50 15 C65 15, 85 35, 85 50 C85 65, 65 85, 50 85 C35 85, 15 65, 15 50 C15 35, 35 15, 50 15 Z" fill="none" stroke="url(#${uniqueGradId})" stroke-width="8" opacity="0.4"/>
+                    <path d="M50 25 C75 10, 90 40, 75 60 C60 80, 40 90, 25 75 C10 60, 20 30, 50 25 Z" fill="none" stroke="url(#${uniqueGradId})" stroke-width="7" stroke-dasharray="4 2"/>
+                    <circle cx="50" cy="50" r="14" fill="url(#${uniqueGradId})" />
+                    <circle cx="50" cy="50" r="5" fill="#ffffff" />
+                </svg>
+            `;
+        }
 
         if (!GROQ_API_KEY) {
             document.getElementById('keyModal').style.display = 'flex';
@@ -557,8 +574,8 @@
             const uniqueId = 'msg-' + Date.now();
             rowDiv.className = `chat-row ${sender}`;
             
-            // Si el remitente es el bot, introduce el SVG del logo, de lo contrario pone la 'U' del usuario
-            const avatarContent = (sender === 'user') ? 'U' : auraLogoSvgHtml;
+            // Genera el logo SVG dinámico e independiente para evitar errores visuales
+            const avatarContent = (sender === 'user') ? 'U' : generateAuraLogoHtml();
             const senderName = (sender === 'user') ? 'Tú' : 'Aura IA';
             
             let imageHtml = "";
@@ -594,7 +611,7 @@
         function clearChat() {
             document.getElementById('chatWrapper').innerHTML = `
                 <div class="chat-row bot">
-                    <div class="avatar">${auraLogoSvgHtml}</div>
+                    <div class="avatar">${generateAuraLogoHtml()}</div>
                     <div class="message-content-wrapper">
                         <div class="sender-name">Aura IA</div>
                         <div class="message-text">Nuevo chat iniciado. ¿En qué te puede ayudar Aura IA hoy?</div>
